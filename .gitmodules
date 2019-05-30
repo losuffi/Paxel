@@ -1,0 +1,3 @@
+[submodule "Paxel/third/spdlog"]
+	path = Paxel/third/spdlog
+	url = https://github.com/gabime/spdlog
