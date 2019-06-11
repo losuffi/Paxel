@@ -20,3 +20,8 @@ void SandBox::Run()
 	Log::GetClientLogger()->info("Log Message!");
 	system("pause");
 }
+
+void SandRunner::Update()
+{
+
+}
