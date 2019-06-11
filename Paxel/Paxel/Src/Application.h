@@ -6,6 +6,8 @@ public:
 	Application();
  	virtual ~Application();
 	virtual void Run() = 0;
+public:
+	static bool isRunning;
 };
 
 class PAXEL_API GameBox

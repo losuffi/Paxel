@@ -15,3 +15,5 @@ void Application::Run()
 {
 }
 
+bool Application::isRunning = true;
+
