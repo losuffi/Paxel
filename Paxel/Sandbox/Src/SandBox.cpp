@@ -1,8 +1,5 @@
 #include "SandBox.h"
-#include "stdio.h"
-#include "stdlib.h"
-#include <thread>
-#include <chrono>
+#include "Window.h"
 SandBox::SandBox()
 {
 
@@ -37,6 +34,7 @@ void SandRunner::Update()
 void SandRunner::Initialize()
 {
 	Log::GetClientLogger()->info("Initialize");
+	Window* origin = new Window(640, 480, "App");
 }
 
 void SandRunner::CleanUp()

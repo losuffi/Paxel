@@ -10,6 +10,9 @@ workspace "Paxel"
 	startproject "Sandbox"
 
 outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
+IncludeDir = {}
+IncludeDir["GLFW"] = "./third/glfw/include"
+include "./third/glfw"
 project "Paxel"
 	location "Paxel"
 	kind "SharedLib"
@@ -17,6 +20,8 @@ project "Paxel"
 
 	targetdir ("bin/"..outputdir.."/%{prj.name}")
 	objdir ("bin-int/"..outputdir.."/%{prj.name}")
+
+	pchheader "PXPCH.h"
 
 	files
 	{
@@ -27,7 +32,15 @@ project "Paxel"
 	includedirs
 	{
 		"./third/spdlog/include",
-		"./third/glfw/include"
+		"./third/glfw/include",
+		"%{IncludeDir.GLFW}",
+		"%{prj.name}/Src"
+	}
+
+	links
+	{
+		"GLFW",
+		"opengl32.lib"
 	}
 
 	filter "system:windows"
@@ -73,8 +86,8 @@ project "Sandbox"
 	includedirs
 	{
 		"./third/spdlog/include",
-		"./third/glfw/include",
-		"./Paxel/Src"
+		"./Paxel/Src",
+		"%{IncludeDir.GLFW}"
 	}
 
 	links

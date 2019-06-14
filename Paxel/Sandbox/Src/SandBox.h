@@ -1,5 +1,9 @@
 #pragma once
 #include "Paxel.h"
+#include "stdio.h"
+#include "stdlib.h"
+#include <thread>
+#include <chrono>
 class SandBox: public Application
 {
 public:
