@@ -1,22 +1,20 @@
 #pragma once
 #include "Event.h"
 
-enum KeyCode
-{
-	None = 0,
-	W,
-	A,
-	S,
-	D,
-};
 
 class PAXEL_API KeyEvent :public Event
 {
 public:
-	inline KeyCode GetKeyCode() const { return m_KeyCode; }
+	inline int Getint() const { return m_int; }
 	EVENT_CLASS_CATEGORY(EventCategoryInput|EventCategoryKeyboard)
 protected:
-	KeyEvent(KeyCode code) :m_KeyCode(code){}
-	KeyCode m_KeyCode;
+	KeyEvent(int code) :m_int(code){}
+	int m_int;
 };
 
+class PAXEL_API KeyPresssedEvent : public KeyEvent
+{
+public:
+	KeyPresssedEvent(int code):KeyEvent(code){}
+	EVENT_CLASS_TYPE(KeyPressed)
+};

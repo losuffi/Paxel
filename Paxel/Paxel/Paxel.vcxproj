@@ -162,6 +162,9 @@
   <ItemGroup>
     <ClCompile Include="Src\Application.cpp" />
     <ClCompile Include="Src\Log.cpp" />
+    <ClCompile Include="Src\PXPCH.cpp">
+      <PrecompiledHeader>Create</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="Src\Window.cpp" />
   </ItemGroup>
   <ItemGroup>

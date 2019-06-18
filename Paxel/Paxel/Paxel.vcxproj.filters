@@ -23,6 +23,7 @@
   <ItemGroup>
     <ClCompile Include="Src\Application.cpp" />
     <ClCompile Include="Src\Log.cpp" />
+    <ClCompile Include="Src\PXPCH.cpp" />
     <ClCompile Include="Src\Window.cpp" />
   </ItemGroup>
 </Project>

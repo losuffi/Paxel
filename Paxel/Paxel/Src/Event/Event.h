@@ -2,14 +2,14 @@
 #include "PXPCH.h"
 enum class EventType
 {
-	None = 0,
+	NoneType = 0,
 	KeyPressed,
 	KeyReleased,
 	KeyClicked,
 };
 enum EventCategory
 {
-	None = 0,
+	CategoryNone = 0,
 	EventCategoryApplication = 1,
 	EventCategoryInput = 1<<1,
 	EventCategoryKeyboard = 1<<2,

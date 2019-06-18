@@ -1,3 +1,4 @@
+#include "PXPCH.h"
 #include "Log.h"
 std::shared_ptr<spdlog::logger> Log::s_CoreLogger;
 std::shared_ptr<spdlog::logger> Log::s_ClientLogger;

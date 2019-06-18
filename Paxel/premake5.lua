@@ -22,7 +22,7 @@ project "Paxel"
 	objdir ("bin-int/"..outputdir.."/%{prj.name}")
 
 	pchheader "PXPCH.h"
-
+	pchsource "%{prj.name}/Src/PXPCH.cpp"
 	files
 	{
 		"%{prj.name}/Src/**.h",
