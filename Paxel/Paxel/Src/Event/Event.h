@@ -28,3 +28,34 @@ public:
 	virtual int GetCategoryFlags() const = 0;
 	inline bool IsInCategory(EventCategory category) { return GetCategoryFlags()&category; }
 };
+static void TestFunc(const char** args)
+{
+	auto a = std::atof(args[0]);
+	auto b = std::atof(args[1]);
+	auto c = a + b;
+	Log::GetCoreLogger()->info(c);
+}
+
+enum DispatchName
+{
+	EVENT_DN_FIRST = 0,
+	EVENT_DN_TEST,
+};
+class PAXEL_API EventDispatcher
+{
+public:
+	typedef void(*DispathFunc)(const char** Args);
+	static void AddHandle(DispatchName HANDLE_NAME,DispathFunc func)
+	{
+		items[HANDLE_NAME] = func;
+	}
+	static void Call(DispatchName HANDLE_NAME,const char** Args)
+	{
+		std::map<DispatchName, DispathFunc>::iterator it = items.find(HANDLE_NAME);
+		assert(it != items.end());
+		it->second(Args);
+	}
+private:
+	//typedef void(*func)(...);
+	static std::map<DispatchName,DispathFunc> items;
+};
