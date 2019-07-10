@@ -19,11 +19,14 @@
     <ClInclude Include="Src\PXPCH.h" />
     <ClInclude Include="Src\Paxel.h" />
     <ClInclude Include="Src\Window.h" />
+    <ClInclude Include="Src\Layer\Layer.h" />
+    <ClInclude Include="Src\Layer\LayerStack.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\Application.cpp" />
     <ClCompile Include="Src\Log.cpp" />
     <ClCompile Include="Src\PXPCH.cpp" />
     <ClCompile Include="Src\Window.cpp" />
+    <ClCompile Include="Src\Layer\LayerStack.cpp" />
   </ItemGroup>
 </Project>

@@ -149,17 +149,20 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Src\Layer\LayerStack.h" />
     <ClInclude Include="Src\Application.h" />
     <ClInclude Include="Src\Core.h" />
     <ClInclude Include="Src\EntryPoint.h" />
     <ClInclude Include="Src\Event\Event.h" />
     <ClInclude Include="Src\Event\KeyEvent.h" />
+    <ClInclude Include="Src\Layer\Layer.h" />
     <ClInclude Include="Src\Log.h" />
     <ClInclude Include="Src\PXPCH.h" />
     <ClInclude Include="Src\Paxel.h" />
     <ClInclude Include="Src\Window.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Src\Layer\LayerStack.cpp" />
     <ClCompile Include="Src\Application.cpp" />
     <ClCompile Include="Src\Log.cpp" />
     <ClCompile Include="Src\PXPCH.cpp">

@@ -22,6 +22,8 @@ public:
 	virtual void Update();
 	virtual void CleanUp();
 	virtual void OnEvent(Event& e);
+
+	void Test();
 };
 
 Application* CreateApplication();
