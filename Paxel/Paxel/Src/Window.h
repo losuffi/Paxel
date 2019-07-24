@@ -1,6 +1,7 @@
 #pragma once
 #include "Core.h"
 #include "PXPCH.h"
+#include "vulkan/vulkan.h"
 #include <GLFW/glfw3.h>
 class PAXEL_API Window
 {
@@ -13,7 +14,11 @@ public:
 	inline void SetEventCallback(const EventCallbackFn& callback) { windowData.EventCallback = callback; }
 	~Window();
 protected:
+	void CreateVkInstance();
+	void CheckVkExtensions();
+protected:
 	GLFWwindow* origin;
+	VkInstance instance;
 	struct WindowData
 	{
 		EventCallbackFn EventCallback;

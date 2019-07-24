@@ -80,7 +80,7 @@
       <PrecompiledHeaderFile>PXPCH.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>PX_PLATFORM_WINDOWS;PX_BUILD_DLL;_WINDLL;PX_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\third\spdlog\include;..\third\glfw\include;..\third\glfw\include;Src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\third\spdlog\include;..\third\glfw\include;..\third\vulkan\Include;Src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -89,7 +89,8 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>opengl32.lib;vulkan-1.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\third\vulkan\Lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ImportLibrary>..\bin\Debug-windows-x86_64\Paxel\Paxel.lib</ImportLibrary>
     </Link>
     <PostBuildEvent>
@@ -102,7 +103,7 @@
       <PrecompiledHeaderFile>PXPCH.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>PX_PLATFORM_WINDOWS;PX_BUILD_DLL;_WINDLL;PX_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\third\spdlog\include;..\third\glfw\include;..\third\glfw\include;Src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\third\spdlog\include;..\third\glfw\include;..\third\vulkan\Include;Src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -115,7 +116,8 @@
       <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>opengl32.lib;vulkan-1.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\third\vulkan\Lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ImportLibrary>..\bin\Release-windows-x86_64\Paxel\Paxel.lib</ImportLibrary>
     </Link>
     <PostBuildEvent>
@@ -128,7 +130,7 @@
       <PrecompiledHeaderFile>PXPCH.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>PX_PLATFORM_WINDOWS;PX_BUILD_DLL;_WINDLL;PX_DIST;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\third\spdlog\include;..\third\glfw\include;..\third\glfw\include;Src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\third\spdlog\include;..\third\glfw\include;..\third\vulkan\Include;Src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -141,7 +143,8 @@
       <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>opengl32.lib;vulkan-1.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\third\vulkan\Lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ImportLibrary>..\bin\Dist-windows-x86_64\Paxel\Paxel.lib</ImportLibrary>
     </Link>
     <PostBuildEvent>
@@ -149,21 +152,21 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="Src\Layer\LayerStack.h" />
     <ClInclude Include="Src\Application.h" />
     <ClInclude Include="Src\Core.h" />
     <ClInclude Include="Src\EntryPoint.h" />
     <ClInclude Include="Src\Event\Event.h" />
     <ClInclude Include="Src\Event\KeyEvent.h" />
     <ClInclude Include="Src\Layer\Layer.h" />
+    <ClInclude Include="Src\Layer\LayerStack.h" />
     <ClInclude Include="Src\Log.h" />
     <ClInclude Include="Src\PXPCH.h" />
     <ClInclude Include="Src\Paxel.h" />
     <ClInclude Include="Src\Window.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Src\Layer\LayerStack.cpp" />
     <ClCompile Include="Src\Application.cpp" />
+    <ClCompile Include="Src\Layer\LayerStack.cpp" />
     <ClCompile Include="Src\Log.cpp" />
     <ClCompile Include="Src\PXPCH.cpp">
       <PrecompiledHeader>Create</PrecompiledHeader>

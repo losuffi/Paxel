@@ -4,6 +4,9 @@
     <Filter Include="Event">
       <UniqueIdentifier>{E70B220D-5320-4ABE-1CA2-ED1D887546EF}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Layer">
+      <UniqueIdentifier>{6287950D-CE9B-BDBE-971D-611E03F1B9EF}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Src\Application.h" />
@@ -15,18 +18,24 @@
     <ClInclude Include="Src\Event\KeyEvent.h">
       <Filter>Event</Filter>
     </ClInclude>
+    <ClInclude Include="Src\Layer\Layer.h">
+      <Filter>Layer</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Layer\LayerStack.h">
+      <Filter>Layer</Filter>
+    </ClInclude>
     <ClInclude Include="Src\Log.h" />
     <ClInclude Include="Src\PXPCH.h" />
     <ClInclude Include="Src\Paxel.h" />
     <ClInclude Include="Src\Window.h" />
-    <ClInclude Include="Src\Layer\Layer.h" />
-    <ClInclude Include="Src\Layer\LayerStack.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\Application.cpp" />
+    <ClCompile Include="Src\Layer\LayerStack.cpp">
+      <Filter>Layer</Filter>
+    </ClCompile>
     <ClCompile Include="Src\Log.cpp" />
     <ClCompile Include="Src\PXPCH.cpp" />
     <ClCompile Include="Src\Window.cpp" />
-    <ClCompile Include="Src\Layer\LayerStack.cpp" />
   </ItemGroup>
 </Project>

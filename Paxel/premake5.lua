@@ -12,6 +12,7 @@ workspace "Paxel"
 outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 IncludeDir = {}
 IncludeDir["GLFW"] = "./third/glfw/include"
+IncludeDir["Vulkan"] = "./third/vulkan/Include"
 include "./third/glfw"
 project "Paxel"
 	location "Paxel"
@@ -32,15 +33,20 @@ project "Paxel"
 	includedirs
 	{
 		"./third/spdlog/include",
-		"./third/glfw/include",
 		"%{IncludeDir.GLFW}",
-		"%{prj.name}/Src"
+		"%{IncludeDir.Vulkan}",
+		"%{prj.name}/Src",
+	}
+	libdirs
+	{
+		"./third/vulkan/Lib",
 	}
 
 	links
 	{
 		"GLFW",
-		"opengl32.lib"
+		"opengl32.lib",
+		"vulkan-1.lib",
 	}
 
 	filter "system:windows"
@@ -87,7 +93,8 @@ project "Sandbox"
 	{
 		"./third/spdlog/include",
 		"./Paxel/Src",
-		"%{IncludeDir.GLFW}"
+		"%{IncludeDir.GLFW}",
+		"%{IncludeDir.Vulkan}",
 	}
 
 	links
