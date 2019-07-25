@@ -16,9 +16,13 @@ public:
 protected:
 	void CreateVkInstance();
 	void CheckVkExtensions();
+	void PickPhysicalDevice();
+	void CreateLogicDevice();
+	bool isSuitableDevice(VkPhysicalDevice device);
 protected:
 	GLFWwindow* origin;
 	VkInstance instance;
+	VkPhysicalDevice physicalDevice;
 	struct WindowData
 	{
 		EventCallbackFn EventCallback;
