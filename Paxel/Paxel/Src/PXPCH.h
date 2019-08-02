@@ -7,6 +7,8 @@
 #include <thread>
 #include <chrono>
 #include <assert.h>
+#include <optional>
+#include <set>
 
 #include "Event/Event.h"
 #include "Event/KeyEvent.h"

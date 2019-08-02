@@ -152,6 +152,7 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Src\RenderCore.h" />
     <ClInclude Include="Src\Application.h" />
     <ClInclude Include="Src\Core.h" />
     <ClInclude Include="Src\EntryPoint.h" />
@@ -165,6 +166,7 @@
     <ClInclude Include="Src\Window.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Src\RenderCore.cpp" />
     <ClCompile Include="Src\Application.cpp" />
     <ClCompile Include="Src\Layer\LayerStack.cpp" />
     <ClCompile Include="Src\Log.cpp" />
