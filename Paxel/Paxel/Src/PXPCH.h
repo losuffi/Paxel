@@ -1,12 +1,12 @@
 #pragma once
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 #include <map>
 #include <memory.h>
 #include <Log.h>
 #include <thread>
 #include <chrono>
-#include <assert.h>
+#include <cassert>
 #include <optional>
 #include <set>
 

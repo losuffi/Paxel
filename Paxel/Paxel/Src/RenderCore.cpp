@@ -123,6 +123,14 @@ bool RenderCore::isSuitableDevice(VkPhysicalDevice device)
 	return indices.IsComplete();
 }
 
+bool RenderCore::CheckDeviceExtensionSupport(VkPhysicalDevice device)
+{
+	uint32_t extensionCount;
+	vkEnumerateDeviceExtensionProperties(device, nullptr, &extensionCount, nullptr);
+	std::vector<VkExtensionProperties> availableExtensions(extensionCount);
+
+}
+
 void RenderCore::CreateSurface()
 {
 	VkWin32SurfaceCreateInfoKHR surface_create_info = {

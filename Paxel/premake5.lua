@@ -13,6 +13,7 @@ outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 IncludeDir = {}
 IncludeDir["GLFW"] = "./third/glfw/include"
 IncludeDir["Vulkan"] = "./third/vulkan/Include"
+IncludeDir["ImGui"] = "./third/imgui/"
 include "./third/glfw"
 project "Paxel"
 	location "Paxel"
@@ -36,6 +37,7 @@ project "Paxel"
 		"%{IncludeDir.GLFW}",
 		"%{IncludeDir.Vulkan}",
 		"%{prj.name}/Src",
+		"%{IncludeDir.ImGui}",
 	}
 	libdirs
 	{

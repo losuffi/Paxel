@@ -27,8 +27,9 @@
     <ClInclude Include="Src\Log.h" />
     <ClInclude Include="Src\PXPCH.h" />
     <ClInclude Include="Src\Paxel.h" />
-    <ClInclude Include="Src\Window.h" />
     <ClInclude Include="Src\RenderCore.h" />
+    <ClInclude Include="Src\Window.h" />
+    <ClInclude Include="Src\Layer\ImGUI\ImguiLayer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\Application.cpp" />
@@ -37,7 +38,8 @@
     </ClCompile>
     <ClCompile Include="Src\Log.cpp" />
     <ClCompile Include="Src\PXPCH.cpp" />
-    <ClCompile Include="Src\Window.cpp" />
     <ClCompile Include="Src\RenderCore.cpp" />
+    <ClCompile Include="Src\Window.cpp" />
+    <ClCompile Include="Src\Layer\ImGUI\ImguiLayer.cpp" />
   </ItemGroup>
 </Project>

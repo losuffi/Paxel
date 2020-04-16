@@ -4,6 +4,7 @@
 class PAXEL_API Layer
 {
 public:
+	virtual ~Layer() = default;
 	const char* LayerName(){ return m_LayerName; }
 	virtual void OnAttach() = 0;
 	virtual void OnDettach() = 0;

@@ -29,6 +29,7 @@ protected:
 	void PickPhysicalDevice();
 	void CreateLogicDevice();
 	bool isSuitableDevice(VkPhysicalDevice device);
+	bool CheckDeviceExtensionSupport(VkPhysicalDevice device);
 	void CreateSurface();
 	QueueFamilyIndics FindQueueFamilies(VkPhysicalDevice device);
 protected:

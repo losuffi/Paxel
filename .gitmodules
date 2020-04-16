@@ -4,3 +4,6 @@
 [submodule "Paxel/third/glfw"]
 	path = Paxel/third/glfw
 	url = git@github.com:glfw/glfw.git
+[submodule "Paxel/third/imgui"]
+	path = Paxel/third/imgui
+	url = git@github.com:losuffi/imgui.git
