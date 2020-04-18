@@ -9,6 +9,11 @@ LayerStack::LayerStack()
 
 LayerStack::~LayerStack()
 {
+	for(auto layer : m_Layers)
+	{
+		delete layer;
+	}
+	m_Layers.clear();
 }
 
 void LayerStack::PushLayer(Layer* layer)

@@ -3,9 +3,8 @@
 enum class EventType
 {
 	NoneType = 0,
-	KeyPressed,
-	KeyReleased,
-	KeyClicked,
+	WindowClose, WindowResize, WindowFocus, WindowLostFocus, WindowMoved,
+	KeyPressed, KeyReleased, KeyClicked,
 };
 enum EventCategory
 {
@@ -20,6 +19,14 @@ enum EventCategory
 virtual EventType GetEventType() const override{return GetStaticType();}\
 virtual const char* GetEventName() const override{return #type;}
 #define EVENT_CLASS_CATEGORY(category) virtual int GetCategoryFlags() const override {return category;}
+
+#define EVENT_REGISTER_SIMPLE(name,category,type)\
+class PAXEL_API name: public Event\
+{\
+public:\
+	EVENT_CLASS_CATEGORY(category)\
+	EVENT_CLASS_TYPE(type)\
+};
 class PAXEL_API Event
 {
 public:
@@ -27,6 +34,7 @@ public:
 	virtual EventType GetEventType() const = 0;
 	virtual int GetCategoryFlags() const = 0;
 	inline bool IsInCategory(EventCategory category) { return GetCategoryFlags()&category; }
+	bool Handled = false;
 };
 static void TestFunc(const char** args)
 {
@@ -41,21 +49,26 @@ enum DispatchName
 	EVENT_DN_FIRST = 0,
 	EVENT_DN_TEST,
 };
+template<typename T>
 class PAXEL_API EventDispatcher
 {
+	using EventFn = std::function<bool(T&)>;
 public:
-	typedef void(*DispathFunc)(const char** Args);
-	static void AddHandle(DispatchName HANDLE_NAME,DispathFunc func)
+
+	EventDispatcher(Event& event)
+		: m_event(event)
 	{
-		items[HANDLE_NAME] = func;
 	}
-	static void Call(DispatchName HANDLE_NAME,const char** Args)
+	bool Dispatch(EventFn Fn)
 	{
-		std::map<DispatchName, DispathFunc>::iterator it = items.find(HANDLE_NAME);
-		assert(it != items.end());
-		it->second(Args);
+		if(m_event.GetEventType() == T::GetStaticType())
+		{
+			m_event.Handled = Fn(*static_cast<T*>(&m_event));
+			return true;
+		}
+		return false;
 	}
+
 private:
-	//typedef void(*func)(...);
-	static std::map<DispatchName,DispathFunc> items;
+	Event& m_event;
 };

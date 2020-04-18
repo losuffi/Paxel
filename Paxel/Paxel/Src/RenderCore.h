@@ -18,11 +18,41 @@ struct QueueFamilyIndics
 	}
 };
 
+struct SwapChainSupportDetails
+{
+	VkSurfaceCapabilitiesKHR capabilities;
+	std::vector<VkSurfaceFormatKHR> formats;
+	std::vector<VkPresentModeKHR> presentModes;
+};
+
+struct VkRenderCoreInfoList
+{
+	const VkInstance instance;
+	const VkPhysicalDevice physicalDevice;
+	const VkDevice device;
+	const VkQueue graphicsQueue;
+	const VkQueue presentQueue;
+	const VkSurfaceKHR surface;
+	const QueueFamilyIndics familyIndics;
+	VkRenderCoreInfoList(VkInstance instance, VkPhysicalDevice physical_device, VkDevice device, VkQueue graphics_queue,
+		VkQueue present_queue, VkSurfaceKHR surface, QueueFamilyIndics Indics)
+		: instance(instance),
+		  physicalDevice(physical_device),
+		  device(device),
+		  graphicsQueue(graphics_queue),
+		  presentQueue(present_queue),
+		  surface(surface),
+		  familyIndics(Indics)
+	{
+	}
+};
+
 class RenderCore
 {
 public:
 	void OnInit(GLFWwindow* wind);
 	void OnDestroy();
+	[[nodiscard]] VkRenderCoreInfoList GetInfoList() const;
 protected:
 	void CreateVkInstance();
 	void CheckVkExtensions();
@@ -31,14 +61,21 @@ protected:
 	bool isSuitableDevice(VkPhysicalDevice device);
 	bool CheckDeviceExtensionSupport(VkPhysicalDevice device);
 	void CreateSurface();
-	QueueFamilyIndics FindQueueFamilies(VkPhysicalDevice device);
+	void CreateSwapChain();
+	void CreateImageViews(VkFormat ImageViewFormat);
+	
+	QueueFamilyIndics FindQueueFamilies(VkPhysicalDevice device) const;
+	SwapChainSupportDetails QuerySwapChainSupport(VkPhysicalDevice device) const;
 protected:
 	GLFWwindow* window;
 	VkInstance instance;
-	VkPhysicalDevice physicalDevice;
+	VkPhysicalDevice PhysicalDevice;
 	VkDevice device;
 	VkQueue graphicsQueue;
 	VkQueue presentQueue;
 	VkSurfaceKHR surface;
+	VkSwapchainKHR swapchain;
+	std::vector<VkImage> swapchainImages;
+	std::vector<VkImageView> swapchainImageviews;
 };
 

@@ -10,6 +10,8 @@ public:
 	virtual void OnDettach() = 0;
 	virtual void OnEvent(Event& event) = 0;
 	virtual void OnUpdate() = 0;
+	virtual void OnBegin() = 0;
+	virtual void OnEnd() = 0;
 	Layer(const char* LayerName):m_LayerName(LayerName){}
 protected:
 	const char* m_LayerName;

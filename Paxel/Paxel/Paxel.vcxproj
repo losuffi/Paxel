@@ -152,6 +152,7 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Src\Event\ApplicationEvent.h" />
     <ClInclude Include="Src\Layer\ImGUI\ImguiLayer.h" />
     <ClInclude Include="Src\Application.h" />
     <ClInclude Include="Src\Core.h" />
@@ -165,8 +166,10 @@
     <ClInclude Include="Src\Paxel.h" />
     <ClInclude Include="Src\RenderCore.h" />
     <ClInclude Include="Src\Window.h" />
+    <ClInclude Include="Src\Platform\WindowsPlatform\WindowsWindow.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Src\Layer\ImGUI\ImGuiBuild.cpp" />
     <ClCompile Include="Src\Layer\ImGUI\ImguiLayer.cpp" />
     <ClCompile Include="Src\Application.cpp" />
     <ClCompile Include="Src\Layer\LayerStack.cpp" />
@@ -175,7 +178,7 @@
       <PrecompiledHeader>Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Src\RenderCore.cpp" />
-    <ClCompile Include="Src\Window.cpp" />
+    <ClCompile Include="Src\Platform\WindowsPlatform\WindowsWindow.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\third\glfw\GLFW.vcxproj">
