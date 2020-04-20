@@ -63,6 +63,8 @@ protected:
 	void CreateSurface();
 	void CreateSwapChain();
 	void CreateImageViews(VkFormat ImageViewFormat);
+	void CreateShaderModule(const std::vector<char>& code);
+	void CreateGraphicPipeline(const std::vector<char>& VertShaderCode, const std::vector<char>& FragShaderCode);
 	
 	QueueFamilyIndics FindQueueFamilies(VkPhysicalDevice device) const;
 	SwapChainSupportDetails QuerySwapChainSupport(VkPhysicalDevice device) const;

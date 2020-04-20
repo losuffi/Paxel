@@ -33,6 +33,8 @@ void ImguiLayer::OnAttach()
 	ImGui_ImplVulkan_InitInfo init_info{ VkInfo->instance,
 		VkInfo->physicalDevice,
 		VkInfo->device,
+		VkInfo->familyIndics.graphicsFamily.value(),
+		VkInfo->graphicsQueue,
 	};
 	ImGui_ImplVulkan_Init("3s")
 }

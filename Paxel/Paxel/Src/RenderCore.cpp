@@ -235,6 +235,22 @@ void RenderCore::CreateImageViews(VkFormat ImageViewFormat)
 	}
 }
 
+VkShaderModule RenderCore::CreateShaderModule(const std::vector<char>& code)
+{
+	VkShaderModuleCreateInfo CreateInfo{};
+	CreateInfo.sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;
+	CreateInfo.codeSize = code.size();
+	CreateInfo.pCode = reinterpret_cast<const uint32_t*>(code.data());
+	VkShaderModule ShaderModule;
+	PX_ENSURE_RET_VAL(vkCreateShaderModule(device, &CreateInfo, nullptr, &ShaderModule) == VK_SUCCESS, nullptr, "Failed to create shader module!");
+	return ShaderModule;
+}
+
+void RenderCore::CreateGraphicPipeline(const std::vector<char>& VertShaderCode,const std::vector<char>& FragShaderCode)
+{
+	
+}
+
 QueueFamilyIndics RenderCore::FindQueueFamilies(VkPhysicalDevice device) const
 {
 	QueueFamilyIndics indices;
