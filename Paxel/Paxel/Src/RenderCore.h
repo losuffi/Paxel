@@ -7,6 +7,45 @@
 #include <GLFW/glfw3native.h>
 #include "Core.h"
 
+#define PX_RENDER_GENERATE_SHADER_STAGE_INFO(InfoName, Stage, ShaderModule, EnterFunc)\
+	VkPipelineShaderStageCreateInfo InfoName{};\
+	InfoName.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;\
+	InfoName.stage = Stage;\
+	InfoName.module = ShaderModule;\
+	InfoName.pName = #EnterFunc;
+
+#define PX_RENDER_GENERATE_VERTEX_INPUT_STATE_INFO(InfoName, VertexBindingDescriptionCount, VertexAttributeDescriptionCount)\
+	VkPipelineVertexInputStateCreateInfo InfoName{}; \
+	InfoName.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;\
+	InfoName.vertexBindingDescriptionCount = VertexBindingDescriptionCount;\
+	InfoName.vertexAttributeDescriptionCount = VertexAttributeDescriptionCount;
+
+#define PX_RENDER_GENERATE_INPUT_ASSEMBLY_STATE_INFO(InfoName, Topology, PrimitiveRestartEnable)\
+	VkPipelineInputAssemblyStateCreateInfo InfoName{};\
+	InfoName.sType = VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO;\
+	InfoName.topology = Topology;\
+	InfoName.primitiveRestartEnable = PrimitiveRestartEnable;
+
+#define PX_RENDER_GENERATE_VIEWPORT_STATE_INFO(InfoName, ViewportCount, ViewportArrPTR, ScissorCount, ScissorArrPTR)\
+	VkPipelineViewportStateCreateInfo InfoName{};\
+	InfoName.sType = VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_STATE_CREATE_INFO;\
+	InfoName.viewportCount = ViewportCount;\
+	InfoName.pViewports = ViewportArrPTR;\
+	InfoName.scissorCount = ScissorCount;\
+	InfoName.pScissors = ScissorArrPTR;
+
+#define PX_RENDER_GENERATE_RASTERIZATION_STATE_INFO(InfoName, DepthClampEnable, RasterizationDiscardEnable, PolygonMode, LineWidth, CullMode, FrontFace, DepthBiasEnable)\
+	VkPipelineRasterizationStateCreateInfo InfoName{};\
+	InfoName.sType = VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_CREATE_INFO;\
+	InfoName.depthClampEnable = DepthClampEnable;\
+	InfoName.rasterizerDiscardEnable = RasterizationDiscardEnable;\
+	InfoName.polygonMode = PolygonMode;\
+	InfoName.lineWidth = LineWidth;\
+	InfoName.cullMode = CullMode;\
+	InfoName.frontFace = FrontFace;\
+	InfoName.depthBiasEnable = DepthBiasEnable;
+
+
 struct QueueFamilyIndics 
 {
 	std::optional<uint32_t> graphicsFamily;
@@ -34,17 +73,7 @@ struct VkRenderCoreInfoList
 	const VkQueue presentQueue;
 	const VkSurfaceKHR surface;
 	const QueueFamilyIndics familyIndics;
-	VkRenderCoreInfoList(VkInstance instance, VkPhysicalDevice physical_device, VkDevice device, VkQueue graphics_queue,
-		VkQueue present_queue, VkSurfaceKHR surface, QueueFamilyIndics Indics)
-		: instance(instance),
-		  physicalDevice(physical_device),
-		  device(device),
-		  graphicsQueue(graphics_queue),
-		  presentQueue(present_queue),
-		  surface(surface),
-		  familyIndics(Indics)
-	{
-	}
+	const uint32_t ImageViewCount;
 };
 
 class RenderCore
@@ -63,7 +92,7 @@ protected:
 	void CreateSurface();
 	void CreateSwapChain();
 	void CreateImageViews(VkFormat ImageViewFormat);
-	void CreateShaderModule(const std::vector<char>& code);
+	VkShaderModule CreateShaderModule(const std::vector<char>& code);
 	void CreateGraphicPipeline(const std::vector<char>& VertShaderCode, const std::vector<char>& FragShaderCode);
 	
 	QueueFamilyIndics FindQueueFamilies(VkPhysicalDevice device) const;
@@ -76,6 +105,7 @@ protected:
 	VkQueue graphicsQueue;
 	VkQueue presentQueue;
 	VkSurfaceKHR surface;
+	VkExtent2D swapchainExtent;
 	VkSwapchainKHR swapchain;
 	std::vector<VkImage> swapchainImages;
 	std::vector<VkImageView> swapchainImageviews;

@@ -30,11 +30,27 @@ void ImguiLayer::OnAttach()
 	ImGui_ImplGlfw_InitForVulkan(window, true);
 
 	auto VkInfo = static_cast<VkRenderCoreInfoList*>(RenderCoreInfoList);
+	auto Fn = [](VkResult res)
+	{
+		if(res == VK_SUCCESS)
+		{
+			PX_CORE_INFO("Init Imgui succ!!");
+			return;
+		}
+		PX_CORE_ERROR("Failed to init Imgui!");
+	};
 	ImGui_ImplVulkan_InitInfo init_info{ VkInfo->instance,
 		VkInfo->physicalDevice,
 		VkInfo->device,
 		VkInfo->familyIndics.graphicsFamily.value(),
 		VkInfo->graphicsQueue,
+		VK_NULL_HANDLE,
+		VK_NULL_HANDLE,
+		VkInfo->ImageViewCount,
+		VkInfo->ImageViewCount,
+		VK_SAMPLE_COUNT_32_BIT,
+		nullptr,
+		Fn
 	};
 	ImGui_ImplVulkan_Init("3s")
 }

@@ -25,8 +25,10 @@ void RenderCore::OnDestroy()
 VkRenderCoreInfoList RenderCore::GetInfoList() const
 {
 	const auto indics = FindQueueFamilies(PhysicalDevice);
-	return VkRenderCoreInfoList(instance, PhysicalDevice, device,
-		graphicsQueue, presentQueue, surface, indics);
+	return VkRenderCoreInfoList{
+		instance, PhysicalDevice, device,
+		graphicsQueue, presentQueue, surface,
+		indics, swapchainImageviews.size()};
 }
 
 void RenderCore::CreateVkInstance()
@@ -178,7 +180,7 @@ void RenderCore::CreateSwapChain()
 			return actualExtent;
 		}
 	};
-	VkExtent2D Extent = ChoseSwapExtent(SwapChainSupport.capabilities);
+	swapchainExtent = ChoseSwapExtent(SwapChainSupport.capabilities);
 	uint32_t ImageCount = SwapChainSupport.capabilities.minImageCount + 1;
 
 	if(SwapChainSupport.capabilities.maxImageCount > 0 && ImageCount > SwapChainSupport.capabilities.maxImageCount)
@@ -190,7 +192,7 @@ void RenderCore::CreateSwapChain()
 	CreateInfo.sType = VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR;
 	CreateInfo.imageFormat = SwapChainSupport.formats[0].format;
 	CreateInfo.imageColorSpace = SwapChainSupport.formats[0].colorSpace;
-	CreateInfo.imageExtent = Extent;
+	CreateInfo.imageExtent = swapchainExtent;
 	CreateInfo.imageArrayLayers = 1;
 	CreateInfo.imageUsage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
 
@@ -248,7 +250,34 @@ VkShaderModule RenderCore::CreateShaderModule(const std::vector<char>& code)
 
 void RenderCore::CreateGraphicPipeline(const std::vector<char>& VertShaderCode,const std::vector<char>& FragShaderCode)
 {
-	
+	//Shader Specify
+	const VkShaderModule VertShaderModule = CreateShaderModule(VertShaderCode);
+	const VkShaderModule FragShaderModule = CreateShaderModule(FragShaderCode);
+	PX_RENDER_GENERATE_SHADER_STAGE_INFO(VertShaderStageInfo, VK_SHADER_STAGE_VERTEX_BIT, VertShaderModule, main);
+	PX_RENDER_GENERATE_SHADER_STAGE_INFO(FragShaderStageInfo, VK_SHADER_STAGE_FRAGMENT_BIT, FragShaderModule, main);
+
+	VkPipelineShaderStageCreateInfo ShaderStages[] = { VertShaderStageInfo, FragShaderStageInfo };
+	//Vertex Input & Topology
+	PX_RENDER_GENERATE_VERTEX_INPUT_STATE_INFO(VertexInputInfo, 0, 0);
+	PX_RENDER_GENERATE_INPUT_ASSEMBLY_STATE_INFO(InputAssembly, VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST,VK_FALSE);
+
+	//Viewport and Scissor
+	VkViewport Viewport{ 0,0,static_cast<float>(swapchainExtent.width),
+		static_cast<float>(swapchainExtent.height),0,1.0f };
+	VkRect2D Scissor{};
+	Scissor.extent = swapchainExtent;
+	Scissor.offset = { 0, 0 };
+	PX_RENDER_GENERATE_VIEWPORT_STATE_INFO(ViewportState, 1, &Viewport, 1, &Scissor);
+
+	/*Rasterization setting
+		1.rasterzerDiscardEnable:
+			if rasterzerDiscardEnable == VK_TRUE, then geometry never passes the rasterization stage.
+			Basically disables any output to framebuffer;
+		2.frontFace:
+			specifies the vertex order for face to be considered front-facing and can be clockwise or counterclockwise.
+	*/
+	PX_RENDER_GENERATE_RASTERIZATION_STATE_INFO(Rasterization, VK_FALSE, VK_FALSE, VK_POLYGON_MODE_FILL,
+		1.0f, VK_CULL_MODE_BACK_BIT, VK_FRONT_FACE_CLOCKWISE, VK_FALSE);
 }
 
 QueueFamilyIndics RenderCore::FindQueueFamilies(VkPhysicalDevice device) const
