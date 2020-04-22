@@ -278,6 +278,30 @@ void RenderCore::CreateGraphicPipeline(const std::vector<char>& VertShaderCode,c
 	*/
 	PX_RENDER_GENERATE_RASTERIZATION_STATE_INFO(Rasterization, VK_FALSE, VK_FALSE, VK_POLYGON_MODE_FILL,
 		1.0f, VK_CULL_MODE_BACK_BIT, VK_FRONT_FACE_CLOCKWISE, VK_FALSE);
+
+	// Multi Sample
+	PX_RENDER_GENERATE_MULTI_SAMPLE_STATE_INFO(MultiSampling, VK_FALSE, VK_SAMPLE_COUNT_1_BIT);
+
+	//ColorBlend and Color Attachment
+	VkPipelineColorBlendAttachmentState ColorBlendAttachment{};
+	ColorBlendAttachment.colorWriteMask = VK_COLOR_COMPONENT_R_BIT | VK_COLOR_COMPONENT_G_BIT | VK_COLOR_COMPONENT_B_BIT | VK_COLOR_COMPONENT_A_BIT;
+	ColorBlendAttachment.blendEnable = false;
+
+	VkPipelineColorBlendStateCreateInfo ColorBlending{};
+	ColorBlending.sType = VK_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_STATE_CREATE_INFO;
+	ColorBlending.logicOpEnable = VK_FALSE;
+	ColorBlending.logicOp = VK_LOGIC_OP_COPY;
+	ColorBlending.attachmentCount = 1;
+	ColorBlending.pAttachments = &ColorBlendAttachment;
+	ColorBlending.blendConstants[0] = 0.0;
+	ColorBlending.blendConstants[1] = 0.0;
+	ColorBlending.blendConstants[2] = 0.0;
+	ColorBlending.blendConstants[3] = 0.0;
+
+	//Pipeline Layout
+	PX_RENDER_GENERATE_PIPELINE_LAYOUT_INFO(PipelineLayoutInfo, 0, 0);
+
+	PX_ENSURE_RET_VOID(vkCreatePipelineLayout(device, &PipelineLayoutInfo, nullptr, &pipelineLayout))
 }
 
 QueueFamilyIndics RenderCore::FindQueueFamilies(VkPhysicalDevice device) const

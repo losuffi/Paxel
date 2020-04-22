@@ -45,6 +45,17 @@
 	InfoName.frontFace = FrontFace;\
 	InfoName.depthBiasEnable = DepthBiasEnable;
 
+#define PX_RENDER_GENERATE_MULTI_SAMPLE_STATE_INFO(InfoName, SampleShaderEnable, RasterizationSamples)\
+	VkPipelineMultisampleStateCreateInfo InfoName{};\
+	InfoName.sType = VK_STRUCTURE_TYPE_PIPELINE_MULTISAMPLE_STATE_CREATE_INFO;\
+	InfoName.sampleShadingEnable = SampleShaderEnable;\
+	InfoName.rasterizationSamples = RasterizationSamples;
+
+#define PX_RENDER_GENERATE_PIPELINE_LAYOUT_INFO(InfoName, LayoutCount, PushConstantRangeCount)\
+	VkPipelineLayoutCreateInfo InfoName{};\
+	InfoName.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;\
+	InfoName.setLayoutCount = LayoutCount;\
+	InfoName.pushConstantRangeCount = PushConstantRangeCount;
 
 struct QueueFamilyIndics 
 {
@@ -107,6 +118,8 @@ protected:
 	VkSurfaceKHR surface;
 	VkExtent2D swapchainExtent;
 	VkSwapchainKHR swapchain;
+	VkPipelineLayout pipelineLayout;
+	VkPipeline graphicPipeline;
 	std::vector<VkImage> swapchainImages;
 	std::vector<VkImageView> swapchainImageviews;
 };
