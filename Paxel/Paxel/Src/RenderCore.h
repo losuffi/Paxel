@@ -105,6 +105,9 @@ protected:
 	void CreateImageViews(VkFormat ImageViewFormat);
 	VkShaderModule CreateShaderModule(const std::vector<char>& code);
 	void CreateGraphicPipeline(const std::vector<char>& VertShaderCode, const std::vector<char>& FragShaderCode);
+
+	void CreateRenderPass(VkFormat ViewFormat);
+	
 	
 	QueueFamilyIndics FindQueueFamilies(VkPhysicalDevice device) const;
 	SwapChainSupportDetails QuerySwapChainSupport(VkPhysicalDevice device) const;
@@ -120,6 +123,7 @@ protected:
 	VkSwapchainKHR swapchain;
 	VkPipelineLayout pipelineLayout;
 	VkPipeline graphicPipeline;
+	VkRenderPass renderPass;
 	std::vector<VkImage> swapchainImages;
 	std::vector<VkImageView> swapchainImageviews;
 };

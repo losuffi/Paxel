@@ -300,8 +300,53 @@ void RenderCore::CreateGraphicPipeline(const std::vector<char>& VertShaderCode,c
 
 	//Pipeline Layout
 	PX_RENDER_GENERATE_PIPELINE_LAYOUT_INFO(PipelineLayoutInfo, 0, 0);
+	PX_ENSURE_RET_VOID(vkCreatePipelineLayout(device, &PipelineLayoutInfo, nullptr, &pipelineLayout) == VK_SUCCESS, "Failed to create pipeline layout!");
 
-	PX_ENSURE_RET_VOID(vkCreatePipelineLayout(device, &PipelineLayoutInfo, nullptr, &pipelineLayout))
+	//Pipeline Create
+	VkGraphicsPipelineCreateInfo PipelineInfo{};
+	PipelineInfo.sType = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
+	PipelineInfo.stageCount = 2;
+	PipelineInfo.pStages = ShaderStages;
+	PipelineInfo.pVertexInputState = &VertexInputInfo;
+	PipelineInfo.pInputAssemblyState = &InputAssembly;
+	PipelineInfo.pViewportState = &ViewportState;
+	PipelineInfo.pRasterizationState = &Rasterization;
+	PipelineInfo.pMultisampleState = &MultiSampling;
+	PipelineInfo.pColorBlendState = &ColorBlending;
+	PipelineInfo.layout = pipelineLayout;
+}
+
+void RenderCore::CreateRenderPass(VkFormat ViewFormat)
+{
+	// A render pass represents a collection of attachments, subpasses, and dependencies between
+	//the subpasses, and describes how the attachments are used over the course of the subpasses.
+	VkAttachmentDescription ColorAttachment{};
+	ColorAttachment.format = ViewFormat;
+	ColorAttachment.samples = VK_SAMPLE_COUNT_1_BIT;
+	ColorAttachment.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
+	ColorAttachment.storeOp = VK_ATTACHMENT_STORE_OP_STORE;
+	ColorAttachment.stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
+	ColorAttachment.stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
+	ColorAttachment.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+	ColorAttachment.finalLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
+
+	VkAttachmentReference ColorAttachmentRef{};
+	ColorAttachmentRef.attachment = 0;
+	ColorAttachmentRef.layout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
+
+	VkSubpassDescription SubPass{};
+	SubPass.pipelineBindPoint = VK_PIPELINE_BIND_POINT_GRAPHICS;
+	SubPass.colorAttachmentCount = 1;
+	SubPass.pColorAttachments = &ColorAttachmentRef;
+
+	VkRenderPassCreateInfo RenderPassInfo{};
+	RenderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO;
+	RenderPassInfo.attachmentCount = 1;
+	RenderPassInfo.pAttachments = &ColorAttachment;
+	RenderPassInfo.subpassCount = 1;
+	RenderPassInfo.pSubpasses = &SubPass;
+
+	PX_ENSURE_RET_VOID(vkCreateRenderPass(device, &RenderPassInfo, nullptr, &renderPass) == VK_SUCCESS, "failed to create render pass!");
 }
 
 QueueFamilyIndics RenderCore::FindQueueFamilies(VkPhysicalDevice device) const
