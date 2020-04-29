@@ -1,5 +1,6 @@
 #include "PXPCH.h"
 #include "RenderCore.h"
+#include "Utils/FileUtils.h"
 void RenderCore::OnInit(GLFWwindow* wind)
 {
 	window = wind;
@@ -8,6 +9,8 @@ void RenderCore::OnInit(GLFWwindow* wind)
 	PickPhysicalDevice();
 	CreateLogicDevice();
 	CreateSwapChain();
+	CreateGraphicPipeline("shaders/vert.spv", "shaders/frag.spv");
+	CreateFramebuffers();
 }
 
 void RenderCore::OnDestroy()
@@ -20,6 +23,11 @@ void RenderCore::OnDestroy()
 	vkDestroyDevice(device, nullptr);
 	vkDestroySurfaceKHR(instance, surface, nullptr);
 	vkDestroyInstance(instance,nullptr);
+	for(auto buffer : swapchainFramebuffers)
+	{
+		vkDestroyFramebuffer(device, buffer, nullptr);
+	}
+	
 }
 
 VkRenderCoreInfoList RenderCore::GetInfoList() const
@@ -210,6 +218,7 @@ void RenderCore::CreateSwapChain()
 	swapchainImages.resize(ImageCount);
 	vkGetSwapchainImagesKHR(device, swapchain, &ImageCount, swapchainImages.data());
 	CreateImageViews(SwapChainSupport.formats[0].format);
+	CreateRenderPass(SwapChainSupport.formats[0].format);
 }
 
 void RenderCore::CreateImageViews(VkFormat ImageViewFormat)
@@ -248,11 +257,11 @@ VkShaderModule RenderCore::CreateShaderModule(const std::vector<char>& code)
 	return ShaderModule;
 }
 
-void RenderCore::CreateGraphicPipeline(const std::vector<char>& VertShaderCode,const std::vector<char>& FragShaderCode)
+void RenderCore::CreateGraphicPipeline(const std::string& VertShaderFile,const std::string& FragShaderFile)
 {
 	//Shader Specify
-	const VkShaderModule VertShaderModule = CreateShaderModule(VertShaderCode);
-	const VkShaderModule FragShaderModule = CreateShaderModule(FragShaderCode);
+	const VkShaderModule VertShaderModule = CreateShaderModule(FileUtils::ReadFile(VertShaderFile));
+	const VkShaderModule FragShaderModule = CreateShaderModule(FileUtils::ReadFile(FragShaderFile));
 	PX_RENDER_GENERATE_SHADER_STAGE_INFO(VertShaderStageInfo, VK_SHADER_STAGE_VERTEX_BIT, VertShaderModule, main);
 	PX_RENDER_GENERATE_SHADER_STAGE_INFO(FragShaderStageInfo, VK_SHADER_STAGE_FRAGMENT_BIT, FragShaderModule, main);
 
@@ -314,6 +323,30 @@ void RenderCore::CreateGraphicPipeline(const std::vector<char>& VertShaderCode,c
 	PipelineInfo.pMultisampleState = &MultiSampling;
 	PipelineInfo.pColorBlendState = &ColorBlending;
 	PipelineInfo.layout = pipelineLayout;
+	PipelineInfo.renderPass = renderPass;
+	PipelineInfo.subpass = 0;
+	PipelineInfo.basePipelineHandle = VK_NULL_HANDLE;
+	PipelineInfo.basePipelineIndex = -1;
+	PX_ENSURE_RET_VOID(vkCreateGraphicsPipelines(device, VK_NULL_HANDLE, 1, &PipelineInfo, nullptr, &graphicPipeline) == VK_SUCCESS, 
+		"Failed to create graphics pipeline!");
+}
+
+void RenderCore::CreateFramebuffers()
+{
+	swapchainFramebuffers.resize(swapchainImageviews.size());
+	for(size_t i = 0; i < swapchainImageviews.size(); ++ i)
+	{
+		VkImageView Attachments[] = { swapchainImageviews[i] };
+		VkFramebufferCreateInfo FramebufferInfo{};
+		FramebufferInfo.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
+		FramebufferInfo.renderPass = renderPass;
+		FramebufferInfo.pAttachments = Attachments;
+		FramebufferInfo.attachmentCount = 1;
+		FramebufferInfo.width = swapchainExtent.width;
+		FramebufferInfo.height = swapchainExtent.height;
+		FramebufferInfo.layers = 1;
+		PX_ENSURE_RET_VOID(vkCreateFramebuffer(device, &FramebufferInfo, nullptr, &swapchainFramebuffers[i]) == VK_SUCCESS, "Failed to create framebuffer!")
+	}
 }
 
 void RenderCore::CreateRenderPass(VkFormat ViewFormat)

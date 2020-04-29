@@ -165,6 +165,7 @@
     <ClInclude Include="Src\PXPCH.h" />
     <ClInclude Include="Src\Paxel.h" />
     <ClInclude Include="Src\RenderCore.h" />
+    <ClInclude Include="Src\Utils\FileUtils.h" />
     <ClInclude Include="Src\Window.h" />
     <ClInclude Include="Src\Platform\WindowsPlatform\WindowsWindow.h" />
   </ItemGroup>
@@ -179,6 +180,7 @@
     </ClCompile>
     <ClCompile Include="Src\RenderCore.cpp" />
     <ClCompile Include="Src\Platform\WindowsPlatform\WindowsWindow.cpp" />
+    <ClCompile Include="Src\Utils\FileUtils.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\third\glfw\GLFW.vcxproj">

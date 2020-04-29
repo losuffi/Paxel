@@ -57,7 +57,7 @@
 	InfoName.setLayoutCount = LayoutCount;\
 	InfoName.pushConstantRangeCount = PushConstantRangeCount;
 
-struct QueueFamilyIndics 
+struct PAXEL_API QueueFamilyIndics
 {
 	std::optional<uint32_t> graphicsFamily;
 	std::optional<uint32_t> presentFamily;
@@ -68,14 +68,14 @@ struct QueueFamilyIndics
 	}
 };
 
-struct SwapChainSupportDetails
+struct PAXEL_API SwapChainSupportDetails
 {
 	VkSurfaceCapabilitiesKHR capabilities;
 	std::vector<VkSurfaceFormatKHR> formats;
 	std::vector<VkPresentModeKHR> presentModes;
 };
 
-struct VkRenderCoreInfoList
+struct PAXEL_API VkRenderCoreInfoList
 {
 	const VkInstance instance;
 	const VkPhysicalDevice physicalDevice;
@@ -87,7 +87,7 @@ struct VkRenderCoreInfoList
 	const uint32_t ImageViewCount;
 };
 
-class RenderCore
+class PAXEL_API RenderCore
 {
 public:
 	void OnInit(GLFWwindow* wind);
@@ -104,8 +104,8 @@ protected:
 	void CreateSwapChain();
 	void CreateImageViews(VkFormat ImageViewFormat);
 	VkShaderModule CreateShaderModule(const std::vector<char>& code);
-	void CreateGraphicPipeline(const std::vector<char>& VertShaderCode, const std::vector<char>& FragShaderCode);
-
+	void CreateGraphicPipeline(const std::string& VertShaderFile, const std::string& FragShaderFile);
+	void CreateFramebuffers();
 	void CreateRenderPass(VkFormat ViewFormat);
 	
 	
@@ -126,5 +126,6 @@ protected:
 	VkRenderPass renderPass;
 	std::vector<VkImage> swapchainImages;
 	std::vector<VkImageView> swapchainImageviews;
+	std::vector<VkFramebuffer> swapchainFramebuffers;
 };
 

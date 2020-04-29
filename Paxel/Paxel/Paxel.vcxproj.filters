@@ -32,6 +32,7 @@
     <ClInclude Include="Src\Layer\ImGUI\ImguiLayer.h" />
     <ClInclude Include="Src\Event\ApplicationEvent.h" />
     <ClInclude Include="Src\Platform\WindowsPlatform\WindowsWindow.h" />
+    <ClInclude Include="Src\Utils\FileUtils.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\Application.cpp" />
@@ -44,5 +45,6 @@
     <ClCompile Include="Src\Layer\ImGUI\ImguiLayer.cpp" />
     <ClCompile Include="Src\Platform\WindowsPlatform\WindowsWindow.cpp" />
     <ClCompile Include="Src\Layer\ImGUI\ImGuiBuild.cpp" />
+    <ClCompile Include="Src\Utils\FileUtils.cpp" />
   </ItemGroup>
 </Project>
