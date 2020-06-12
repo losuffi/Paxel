@@ -107,7 +107,9 @@ protected:
 	void CreateGraphicPipeline(const std::string& VertShaderFile, const std::string& FragShaderFile);
 	void CreateFramebuffers();
 	void CreateRenderPass(VkFormat ViewFormat);
-	
+	void CreateCommandPool();
+	void CreateCommandBuffers();
+
 	
 	QueueFamilyIndics FindQueueFamilies(VkPhysicalDevice device) const;
 	SwapChainSupportDetails QuerySwapChainSupport(VkPhysicalDevice device) const;
@@ -124,8 +126,10 @@ protected:
 	VkPipelineLayout pipelineLayout;
 	VkPipeline graphicPipeline;
 	VkRenderPass renderPass;
+	VkCommandPool CommandPool;
 	std::vector<VkImage> swapchainImages;
 	std::vector<VkImageView> swapchainImageviews;
 	std::vector<VkFramebuffer> swapchainFramebuffers;
+	std::vector<VkCommandBuffer> CommandBuffers;
 };
 

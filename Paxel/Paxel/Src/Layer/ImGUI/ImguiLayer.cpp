@@ -52,7 +52,6 @@ void ImguiLayer::OnAttach()
 		nullptr,
 		Fn
 	};
-	ImGui_ImplVulkan_Init(&init_info,)
 }
 
 void ImguiLayer::OnDettach()

@@ -11,6 +11,8 @@ void RenderCore::OnInit(GLFWwindow* wind)
 	CreateSwapChain();
 	CreateGraphicPipeline("shaders/vert.spv", "shaders/frag.spv");
 	CreateFramebuffers();
+	CreateCommandPool();
+	CreateCommandBuffers();
 }
 
 void RenderCore::OnDestroy()
@@ -27,7 +29,7 @@ void RenderCore::OnDestroy()
 	{
 		vkDestroyFramebuffer(device, buffer, nullptr);
 	}
-	
+	vkDestroyCommandPool(device, CommandPool, nullptr);
 }
 
 VkRenderCoreInfoList RenderCore::GetInfoList() const
@@ -380,6 +382,55 @@ void RenderCore::CreateRenderPass(VkFormat ViewFormat)
 	RenderPassInfo.pSubpasses = &SubPass;
 
 	PX_ENSURE_RET_VOID(vkCreateRenderPass(device, &RenderPassInfo, nullptr, &renderPass) == VK_SUCCESS, "failed to create render pass!");
+}
+
+void RenderCore::CreateCommandPool()
+{
+	QueueFamilyIndics QueueFamilyIndices = FindQueueFamilies(PhysicalDevice);
+	VkCommandPoolCreateInfo PoolInfo{};
+	PoolInfo.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
+	PoolInfo.queueFamilyIndex = QueueFamilyIndices.graphicsFamily.value();
+	PoolInfo.flags = 0;
+	PX_ENSURE_RET_VOID(vkCreateCommandPool(device, &PoolInfo, nullptr, &CommandPool) == VK_SUCCESS, "failed to create command pool!");
+}
+
+void RenderCore::CreateCommandBuffers()
+{
+	CommandBuffers.resize(swapchainFramebuffers.size());
+	VkCommandBufferAllocateInfo AllocInfo{};
+	AllocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
+	AllocInfo.commandPool = CommandPool;
+	AllocInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
+	AllocInfo.commandBufferCount = static_cast<uint32_t>(CommandBuffers.size());
+
+	PX_ENSURE_RET_VOID(vkAllocateCommandBuffers(device, &AllocInfo, CommandBuffers.data()) == VK_SUCCESS, "failed to allocate command buffers!");
+
+	for(size_t i = 0; i < CommandBuffers.size(); ++i)
+	{
+		VkCommandBufferBeginInfo beginInfo{};
+		beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
+		beginInfo.flags = 0;
+		beginInfo.pInheritanceInfo = nullptr;
+
+		PX_ENSURE_RET_VOID(vkBeginCommandBuffer(CommandBuffers[i], &beginInfo) == VK_SUCCESS, "failed to begin recording command buffer!");
+
+		VkRenderPassBeginInfo RenderPassInfo{};
+		RenderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
+		RenderPassInfo.renderPass = renderPass;
+		RenderPassInfo.framebuffer = swapchainFramebuffers[i];
+		RenderPassInfo.renderArea.offset = {0, 0};
+		RenderPassInfo.renderArea.extent = swapchainExtent;
+
+		VkClearValue ClearColor = {0.0f, 0.0f, 0.0f, 0.0f};
+		RenderPassInfo.clearValueCount = 1;
+		RenderPassInfo.pClearValues = &ClearColor;
+
+		vkCmdBeginRenderPass(CommandBuffers[i], &RenderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
+		vkCmdBindPipeline(CommandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, graphicPipeline);
+		vkCmdDraw(CommandBuffers[i], 3, 1, 0, 0);
+		vkCmdEndRenderPass(CommandBuffers[i]);
+		PX_ENSURE_RET_VOID(vkEndCommandBuffer(CommandBuffers[i] == VK_SUCCESS, "failed to record command buffer"));
+	}
 }
 
 QueueFamilyIndics RenderCore::FindQueueFamilies(VkPhysicalDevice device) const
