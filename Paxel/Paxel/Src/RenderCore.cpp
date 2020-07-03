@@ -433,6 +433,39 @@ void RenderCore::CreateCommandBuffers()
 	}
 }
 
+void RenderCore::CreateVulkanInstance(VkInstance& Instance)
+{
+	CheckVkExtensions();
+	VkApplicationInfo appinfo = {};
+	appinfo.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
+	appinfo.pApplicationName = "Paxel Engine";
+	appinfo.pEngineName = "Paxel";
+	appinfo.applicationVersion = VK_MAKE_VERSION(1, 0, 0);
+	appinfo.engineVersion = VK_MAKE_VERSION(1, 0, 0);
+	appinfo.apiVersion = VK_API_VERSION_1_0;
+
+	VkInstanceCreateInfo createinfo = {};
+	createinfo.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
+	createinfo.pApplicationInfo = &appinfo;
+	uint32_t glfwExtensionCount = 0;
+	const char** glfwExtension;
+	glfwExtension = glfwGetRequiredInstanceExtensions(&glfwExtensionCount);
+	
+#ifdef PAXEL_LOW_LEVEL_RUNTIME_LOG_ENABLE
+	Log::GetCoreLogger()->info("glfw require extensions:");
+	for (int i =0; i < glfwExtensionCount; i++)
+	{
+		Log::GetCoreLogger()->info(*(glfwExtension + i));
+	}
+#endif
+
+	createinfo.enabledExtensionCount = glfwExtensionCount;
+	createinfo.ppEnabledExtensionNames = glfwExtension;
+	createinfo.enabledLayerCount = 0;
+	
+	PX_ENSURE_RET_VOID(vkCreateInstance(&createinfo, nullptr, &Instance) == VK_SUCCESS,"Create intance failed!");
+}
+
 QueueFamilyIndics RenderCore::FindQueueFamilies(VkPhysicalDevice device) const
 {
 	QueueFamilyIndics indices;

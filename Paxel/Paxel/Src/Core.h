@@ -21,3 +21,5 @@ if (!(condi))\
 PX_CORE_ERROR("Assertion Failded: {0}", __VA_ARGS__); \
 return Ret; \
 }
+
+#define PAXEL_LOW_LEVEL_RUNTIME_LOG_ENABLE 0

@@ -95,7 +95,6 @@ public:
 	[[nodiscard]] VkRenderCoreInfoList GetInfoList() const;
 protected:
 	void CreateVkInstance();
-	void CheckVkExtensions();
 	void PickPhysicalDevice();
 	void CreateLogicDevice();
 	bool isSuitableDevice(VkPhysicalDevice device);
@@ -110,6 +109,9 @@ protected:
 	void CreateCommandPool();
 	void CreateCommandBuffers();
 
+	//Function Collections
+	static void CreateVulkanInstance(VkInstance& Instance);
+	static void CheckVkExtensions();
 	
 	QueueFamilyIndics FindQueueFamilies(VkPhysicalDevice device) const;
 	SwapChainSupportDetails QuerySwapChainSupport(VkPhysicalDevice device) const;
