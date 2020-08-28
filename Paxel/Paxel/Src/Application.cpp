@@ -41,7 +41,7 @@ void Application::Run()
 void Application::OnEvent(Event& e)
 {
 	EventDispatcher<WindowsCloseEvent> dispatcher(e);
-	dispatcher.Dispatch(PX_BIND_EVENT_FN(OnWindowsClose));
+	dispatcher.Dispatch(PX_BIND_EVENT_FN(Application::OnWindowsClose));
 
 	for(auto it = m_LayerStack.end(); it!=m_LayerStack.begin();)
 	{

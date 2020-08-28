@@ -2,10 +2,11 @@
 #define GLFW_EXPOSE_NATIVE_WIN32
 #include "PXPCH.h"
 #include <vulkan/vulkan.h>
-#include <vulkan/vulkan_win32.h>
 #include <GLFW/glfw3.h>
-#include <GLFW/glfw3native.h>
+#include <examples/imgui_impl_vulkan.h>
 #include "Core.h"
+
+#define PX_MIN_IMAGE_COUNT 2
 
 #define PX_RENDER_GENERATE_SHADER_STAGE_INFO(InfoName, Stage, ShaderModule, EnterFunc)\
 	VkPipelineShaderStageCreateInfo InfoName{};\
@@ -90,16 +91,20 @@ struct PAXEL_API VkRenderCoreInfoList
 class PAXEL_API RenderCore
 {
 public:
-	void OnInit(GLFWwindow* wind);
+	void SetupVulkan();
+	void SetVulkanWindow(ImGui_ImplVulkanH_Window* window, VkSurfaceKHR surface,int	width,	int	height);
+	void CleanupVulkanWindow();
 	void OnDestroy();
+	void ImguiRendererBinding(GLFWwindow* window);
 	[[nodiscard]] VkRenderCoreInfoList GetInfoList() const;
+public:
+	ImGui_ImplVulkanH_Window WindowData;
 protected:
 	void CreateVkInstance();
 	void PickPhysicalDevice();
 	void CreateLogicDevice();
 	bool isSuitableDevice(VkPhysicalDevice device);
 	bool CheckDeviceExtensionSupport(VkPhysicalDevice device);
-	void CreateSurface();
 	void CreateSwapChain();
 	void CreateImageViews(VkFormat ImageViewFormat);
 	VkShaderModule CreateShaderModule(const std::vector<char>& code);
@@ -108,7 +113,10 @@ protected:
 	void CreateRenderPass(VkFormat ViewFormat);
 	void CreateCommandPool();
 	void CreateCommandBuffers();
+	void CreateDescriptorPool();
 
+	
+	
 	//Function Collections
 	static void CreateVulkanInstance(VkInstance& Instance);
 	static void CheckVkExtensions();
@@ -116,7 +124,7 @@ protected:
 	QueueFamilyIndics FindQueueFamilies(VkPhysicalDevice device) const;
 	SwapChainSupportDetails QuerySwapChainSupport(VkPhysicalDevice device) const;
 protected:
-	GLFWwindow* window;
+	//GLFWwindow* window;
 	VkInstance instance;
 	VkPhysicalDevice PhysicalDevice;
 	VkDevice device;
@@ -129,6 +137,7 @@ protected:
 	VkPipeline graphicPipeline;
 	VkRenderPass renderPass;
 	VkCommandPool CommandPool;
+	VkDescriptorPool descriptorPool;
 	std::vector<VkImage> swapchainImages;
 	std::vector<VkImageView> swapchainImageviews;
 	std::vector<VkFramebuffer> swapchainFramebuffers;

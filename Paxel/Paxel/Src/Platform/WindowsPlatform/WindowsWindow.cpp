@@ -23,7 +23,7 @@ WindowsWindow::~WindowsWindow()
 
 void WindowsWindow::OnUpdate()
 {
-	glClear(GL_COLOR_BUFFER_BIT);
+	//glClear(GL_COLOR_BUFFER_BIT);
 	glfwSwapBuffers(origin);
 	glfwPollEvents();
 }
@@ -32,7 +32,7 @@ void WindowsWindow::OnInit()
 {
 	glfwSetWindowUserPointer(origin, &windowData);
 	renderer = new RenderCore();
-	renderer->OnInit(origin);
+	renderer->SetupVulkan();
 	glfwSetKeyCallback(origin, [](GLFWwindow* window, int key, int scancode, int action, int mods)
 	{
 		const auto m_data = *static_cast<WindowData*>(glfwGetWindowUserPointer(window));

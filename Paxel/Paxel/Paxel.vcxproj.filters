@@ -7,16 +7,34 @@
     <Filter Include="Layer">
       <UniqueIdentifier>{6287950D-CE9B-BDBE-971D-611E03F1B9EF}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Layer\ImGUI">
+      <UniqueIdentifier>{CC79320A-382F-ABFF-C123-A5D62DD8A103}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Platform">
+      <UniqueIdentifier>{2AC788B4-1694-E3BF-3FAD-D1672BD9184E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Platform\WindowsPlatform">
+      <UniqueIdentifier>{899C14BE-75C1-633E-9E0C-49CE8A90625C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utils">
+      <UniqueIdentifier>{F68B420E-62A0-6ABF-2B22-0E1F97F566F0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Src\Application.h" />
     <ClInclude Include="Src\Core.h" />
     <ClInclude Include="Src\EntryPoint.h" />
+    <ClInclude Include="Src\Event\ApplicationEvent.h">
+      <Filter>Event</Filter>
+    </ClInclude>
     <ClInclude Include="Src\Event\Event.h">
       <Filter>Event</Filter>
     </ClInclude>
     <ClInclude Include="Src\Event\KeyEvent.h">
       <Filter>Event</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Layer\ImGUI\ImguiLayer.h">
+      <Filter>Layer\ImGUI</Filter>
     </ClInclude>
     <ClInclude Include="Src\Layer\Layer.h">
       <Filter>Layer</Filter>
@@ -27,24 +45,34 @@
     <ClInclude Include="Src\Log.h" />
     <ClInclude Include="Src\PXPCH.h" />
     <ClInclude Include="Src\Paxel.h" />
+    <ClInclude Include="Src\Platform\WindowsPlatform\WindowsWindow.h">
+      <Filter>Platform\WindowsPlatform</Filter>
+    </ClInclude>
     <ClInclude Include="Src\RenderCore.h" />
+    <ClInclude Include="Src\Utils\FileUtils.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
     <ClInclude Include="Src\Window.h" />
-    <ClInclude Include="Src\Layer\ImGUI\ImguiLayer.h" />
-    <ClInclude Include="Src\Event\ApplicationEvent.h" />
-    <ClInclude Include="Src\Platform\WindowsPlatform\WindowsWindow.h" />
-    <ClInclude Include="Src\Utils\FileUtils.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\Application.cpp" />
+    <ClCompile Include="Src\Layer\ImGUI\ImGuiBuild.cpp">
+      <Filter>Layer\ImGUI</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Layer\ImGUI\ImguiLayer.cpp">
+      <Filter>Layer\ImGUI</Filter>
+    </ClCompile>
     <ClCompile Include="Src\Layer\LayerStack.cpp">
       <Filter>Layer</Filter>
     </ClCompile>
     <ClCompile Include="Src\Log.cpp" />
     <ClCompile Include="Src\PXPCH.cpp" />
+    <ClCompile Include="Src\Platform\WindowsPlatform\WindowsWindow.cpp">
+      <Filter>Platform\WindowsPlatform</Filter>
+    </ClCompile>
     <ClCompile Include="Src\RenderCore.cpp" />
-    <ClCompile Include="Src\Layer\ImGUI\ImguiLayer.cpp" />
-    <ClCompile Include="Src\Platform\WindowsPlatform\WindowsWindow.cpp" />
-    <ClCompile Include="Src\Layer\ImGUI\ImGuiBuild.cpp" />
-    <ClCompile Include="Src\Utils\FileUtils.cpp" />
+    <ClCompile Include="Src\Utils\FileUtils.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

@@ -1,35 +1,43 @@
 #include "PXPCH.h"
 #include "RenderCore.h"
-#include "Utils/FileUtils.h"
-void RenderCore::OnInit(GLFWwindow* wind)
-{
-	window = wind;
-	CreateVkInstance();
-	CreateSurface();
-	PickPhysicalDevice();
-	CreateLogicDevice();
-	CreateSwapChain();
-	CreateGraphicPipeline("shaders/vert.spv", "shaders/frag.spv");
-	CreateFramebuffers();
-	CreateCommandPool();
-	CreateCommandBuffers();
-}
 
+#include <examples/imgui_impl_glfw.h>
+
+#include "Utils/FileUtils.h"
 void RenderCore::OnDestroy()
 {
 	for(auto imageView : swapchainImageviews)
 	{
 		vkDestroyImageView(device, imageView, nullptr);
 	}
+	vkDestroyDescriptorPool(device, descriptorPool, nullptr);
 	vkDestroySwapchainKHR(device, swapchain, nullptr);
-	vkDestroyDevice(device, nullptr);
+	
 	vkDestroySurfaceKHR(instance, surface, nullptr);
-	vkDestroyInstance(instance,nullptr);
 	for(auto buffer : swapchainFramebuffers)
 	{
 		vkDestroyFramebuffer(device, buffer, nullptr);
 	}
 	vkDestroyCommandPool(device, CommandPool, nullptr);
+	vkDestroyDevice(device, nullptr);
+	vkDestroyInstance(instance,nullptr);
+}
+
+void RenderCore::ImguiRendererBinding(GLFWwindow* window)
+{
+	ImGui_ImplGlfw_InitForVulkan(window, true);
+	ImGui_ImplVulkan_InitInfo initInfo = {};
+	initInfo.Instance = instance;
+	initInfo.PhysicalDevice = PhysicalDevice;
+	initInfo.Device = device;
+	initInfo.QueueFamily = FindQueueFamilies(PhysicalDevice).graphicsFamily.value();
+	initInfo.Queue = graphicsQueue;
+	initInfo.PipelineCache = nullptr;
+	initInfo.Allocator = nullptr;
+	initInfo.MinImageCount = PX_MIN_IMAGE_COUNT;
+	initInfo.ImageCount = WindowData.ImageCount;
+	initInfo.CheckVkResultFn = nullptr;
+	ImGui_ImplVulkan_Init(&initInfo, WindowData.RenderPass);
 }
 
 VkRenderCoreInfoList RenderCore::GetInfoList() const
@@ -38,7 +46,7 @@ VkRenderCoreInfoList RenderCore::GetInfoList() const
 	return VkRenderCoreInfoList{
 		instance, PhysicalDevice, device,
 		graphicsQueue, presentQueue, surface,
-		indics, swapchainImageviews.size()};
+		indics, static_cast<uint32_t>(swapchainImageviews.size())};
 }
 
 void RenderCore::CreateVkInstance()
@@ -158,18 +166,7 @@ bool RenderCore::CheckDeviceExtensionSupport(VkPhysicalDevice device)
 
 }
 
-void RenderCore::CreateSurface()
-{
-	VkWin32SurfaceCreateInfoKHR surface_create_info = {
-		VK_STRUCTURE_TYPE_WIN32_SURFACE_CREATE_INFO_KHR,
-		nullptr,
-		0,
-		GetModuleHandle(nullptr),
-		glfwGetWin32Window(window),
-	};
-	PX_ENSURE_RET_VOID(vkCreateWin32SurfaceKHR(instance, &surface_create_info, nullptr, &surface) == VK_SUCCESS,
-		"Can't Create Win32 Surface!");
-}
+
 
 void RenderCore::CreateSwapChain()
 {
@@ -429,8 +426,69 @@ void RenderCore::CreateCommandBuffers()
 		vkCmdBindPipeline(CommandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, graphicPipeline);
 		vkCmdDraw(CommandBuffers[i], 3, 1, 0, 0);
 		vkCmdEndRenderPass(CommandBuffers[i]);
-		PX_ENSURE_RET_VOID(vkEndCommandBuffer(CommandBuffers[i] == VK_SUCCESS, "failed to record command buffer"));
+		PX_ENSURE_RET_VOID(vkEndCommandBuffer(CommandBuffers[i]) == VK_SUCCESS, "failed to record command buffer");
 	}
+}
+
+void RenderCore::CreateDescriptorPool()
+{
+	VkDescriptorPoolSize poolSize[] =
+	{
+		{VK_DESCRIPTOR_TYPE_SAMPLER,	1000},
+		{VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,	1000},
+		{VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE,	1000},
+		{VK_DESCRIPTOR_TYPE_STORAGE_IMAGE,	1000},
+		{VK_DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER,	1000},
+		{VK_DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER,	1000},
+		{VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER,	1000},
+		{VK_DESCRIPTOR_TYPE_STORAGE_BUFFER,	1000},
+		{VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC,	1000},
+		{VK_DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC,	1000},
+		{VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT,	1000}
+	};
+	VkDescriptorPoolCreateInfo poolInfo = {};
+	poolInfo.sType	=	VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
+	poolInfo.flags	=	VK_DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT;
+	poolInfo.maxSets	=	1000	*	static_cast<int>(sizeof(poolSize) / sizeof(*poolSize));
+	poolInfo.poolSizeCount	=	static_cast<uint32_t>(sizeof(poolSize)/sizeof(*poolSize));
+	poolInfo.pPoolSizes		=	poolSize;
+	PX_ENSURE_RET_VOID(vkCreateDescriptorPool(device,&poolInfo,nullptr,&descriptorPool) 
+		== VK_SUCCESS,"failed to create descriptor pool");
+	
+}
+
+void RenderCore::SetupVulkan()
+{
+	CreateVkInstance();
+	PickPhysicalDevice();
+	CreateLogicDevice();
+	CreateDescriptorPool();
+}
+
+void RenderCore::SetVulkanWindow(ImGui_ImplVulkanH_Window* window, VkSurfaceKHR surface, int width, int height)
+{
+	window->Surface = surface;
+	VkBool32 res;
+	uint32_t queueIndex = FindQueueFamilies(PhysicalDevice).graphicsFamily.value();
+	vkGetPhysicalDeviceSurfaceSupportKHR(PhysicalDevice, queueIndex, window->Surface, &res);
+	PX_ENSURE_RET_VOID(res,"Error no WSI support on physical device");
+
+	const VkFormat requestSurfaceImageFormat[] = {VK_FORMAT_B8G8R8A8_UNORM, VK_FORMAT_R8G8B8A8_UNORM,VK_FORMAT_B8G8R8_UNORM,VK_FORMAT_R8G8B8_UNORM};
+	const VkColorSpaceKHR requestSurfaceColorSpace = VK_COLORSPACE_SRGB_NONLINEAR_KHR;
+	window->SurfaceFormat = ImGui_ImplVulkanH_SelectSurfaceFormat(PhysicalDevice, window->Surface,
+		requestSurfaceImageFormat,IM_ARRAYSIZE(requestSurfaceImageFormat),requestSurfaceColorSpace);
+
+	VkPresentModeKHR presentModes[] = {VK_PRESENT_MODE_FIFO_KHR};
+	window->PresentMode = ImGui_ImplVulkanH_SelectPresentMode(PhysicalDevice, window->Surface,
+		&presentModes[0], IM_ARRAYSIZE(presentModes));
+
+	ImGui_ImplVulkanH_CreateWindow(instance,PhysicalDevice,device,window,queueIndex,
+		nullptr,width,height, PX_MIN_IMAGE_COUNT);
+}
+
+void RenderCore::CleanupVulkanWindow()
+{
+	ImGui_ImplVulkanH_DestroyWindow(instance,device,&WindowData,nullptr);
 }
 
 void RenderCore::CreateVulkanInstance(VkInstance& Instance)
