@@ -1,7 +1,7 @@
 #include "PXPCH.h"
 #include "RenderCore.h"
 
-#include <examples/imgui_impl_glfw.h>
+//#include <examples/imgui_impl_glfw.h>
 
 #include "Utils/FileUtils.h"
 void RenderCore::OnDestroy()
@@ -25,19 +25,19 @@ void RenderCore::OnDestroy()
 
 void RenderCore::ImguiRendererBinding(GLFWwindow* window)
 {
-	ImGui_ImplGlfw_InitForVulkan(window, true);
-	ImGui_ImplVulkan_InitInfo initInfo = {};
-	initInfo.Instance = instance;
-	initInfo.PhysicalDevice = PhysicalDevice;
-	initInfo.Device = device;
-	initInfo.QueueFamily = FindQueueFamilies(PhysicalDevice).graphicsFamily.value();
-	initInfo.Queue = graphicsQueue;
-	initInfo.PipelineCache = nullptr;
-	initInfo.Allocator = nullptr;
-	initInfo.MinImageCount = PX_MIN_IMAGE_COUNT;
-	initInfo.ImageCount = WindowData.ImageCount;
-	initInfo.CheckVkResultFn = nullptr;
-	ImGui_ImplVulkan_Init(&initInfo, WindowData.RenderPass);
+	//ImGui_ImplGlfw_InitForVulkan(window, true);
+	//ImGui_ImplVulkan_InitInfo initInfo = {};
+	//initInfo.Instance = instance;
+	//initInfo.PhysicalDevice = PhysicalDevice;
+	//initInfo.Device = device;
+	//initInfo.QueueFamily = FindQueueFamilies(PhysicalDevice).graphicsFamily.value();
+	//initInfo.Queue = graphicsQueue;
+	//initInfo.PipelineCache = nullptr;
+	//initInfo.Allocator = nullptr;
+	//initInfo.MinImageCount = PX_MIN_IMAGE_COUNT;
+	//initInfo.ImageCount = WindowData.ImageCount;
+	//initInfo.CheckVkResultFn = nullptr;
+	//ImGui_ImplVulkan_Init(&initInfo, WindowData.RenderPass);
 }
 
 VkRenderCoreInfoList RenderCore::GetInfoList() const
@@ -459,10 +459,10 @@ void RenderCore::CreateDescriptorPool()
 
 void RenderCore::SetupVulkan()
 {
-	CreateVkInstance();
-	PickPhysicalDevice();
-	CreateLogicDevice();
-	CreateDescriptorPool();
+	//CreateVkInstance();
+	//PickPhysicalDevice();
+	//CreateLogicDevice();
+	//CreateDescriptorPool();
 }
 
 void RenderCore::SetVulkanWindow(ImGui_ImplVulkanH_Window* window, VkSurfaceKHR surface, int width, int height)

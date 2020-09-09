@@ -1,7 +1,5 @@
 #pragma once
 #include "PXPCH.h"
-#include "RenderCore.h"
-#include <GLFW/glfw3.h>
 class PAXEL_API Window
 {
 public:

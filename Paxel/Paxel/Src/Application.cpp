@@ -6,11 +6,6 @@ Application::Application()
 {
 	s_Instance = this;
 	origin.reset(Window::Create(1080,640,"Paxel Engine"));
-	origin->SetEventCallback(PX_BIND_EVENT_FN(Application::OnEvent));
-	m_ImGuiLayer = new ImguiLayer();
-	m_ImGuiLayer->SetNativeWindow(origin->GetNativeWindow());
-	m_ImGuiLayer->SetVkRenderCoreInfoList(origin->GetNativeInfoList());
-	PushLayer(m_ImGuiLayer);
 }
 
 
@@ -25,6 +20,13 @@ void Application::Run()
 	Log::GetCoreLogger()->info("App Start!");
 	
 	origin->OnInit();
+
+	origin->SetEventCallback(PX_BIND_EVENT_FN(Application::OnEvent));
+	//m_ImGuiLayer = new ImguiLayer();
+	//m_ImGuiLayer->SetNativeWindow(origin->GetNativeWindow());
+	//m_ImGuiLayer->SetVkRenderCoreInfoList(origin->GetNativeInfoList());
+	//PushLayer(m_ImGuiLayer);
+
 	isRunning = true;
 	while (isRunning)
 	{

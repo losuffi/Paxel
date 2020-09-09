@@ -1,5 +1,7 @@
 #pragma once
 #include "Window.h"
+#include "RenderCore.h"
+#include <GLFW/glfw3.h>
 class WindowsWindow : public Window
 {
 public:

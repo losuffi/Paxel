@@ -1,9 +1,6 @@
 #include "PXPCH.h"
 #include "ImguiLayer.h"
-#include "imgui.h"
 #include "RenderCore.h"
-#include "examples/imgui_impl_glfw.h"
-#include "examples/imgui_impl_vulkan.h"
 void ImguiLayer::OnBegin()
 {
 }
