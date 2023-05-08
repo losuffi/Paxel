@@ -11,10 +11,10 @@ workspace "Paxel"
 
 outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 IncludeDir = {}
-IncludeDir["GLFW"] = "./third/glfw/include"
-IncludeDir["Vulkan"] = "./third/vulkan/Include"
-IncludeDir["ImGui"] = "./third/imgui/"
-include "./third/glfw"
+IncludeDir["GLFW"] = "third/glfw/include"
+IncludeDir["Vulkan"] = "third/vulkan/Include"
+IncludeDir["ImGui"] = "third/imgui/"
+includedirs{"third/glfw"}
 project "Paxel"
 	location "Paxel"
 	kind "SharedLib"
@@ -33,7 +33,7 @@ project "Paxel"
 
 	includedirs
 	{
-		"./third/spdlog/include",
+		"third/spdlog/include",
 		"%{IncludeDir.GLFW}",
 		"%{IncludeDir.Vulkan}",
 		"%{prj.name}/Src",
@@ -41,7 +41,7 @@ project "Paxel"
 	}
 	libdirs
 	{
-		"./third/vulkan/Lib",
+		"third/vulkan/Lib",
 	}
 
 	links
@@ -93,8 +93,8 @@ project "Sandbox"
 
 	includedirs
 	{
-		"./third/spdlog/include",
-		"./Paxel/Src",
+		"third/spdlog/include",
+		"Paxel/Src",
 		"%{IncludeDir.GLFW}",
 		"%{IncludeDir.Vulkan}",
 	}
