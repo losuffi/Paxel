@@ -1,11 +1,11 @@
 #include "PXPCH.h"
-#include "WindowsWindow.h"
+#include "Vulkan_GLFW_Windows_Window.h"
 Window* Window::Create(int width, int height, char* title)
 {
-	return new WindowsWindow(width, height, title);
+	return new Vulkan_GLFW_Windows_Window(width, height, title);
 }
 
-WindowsWindow::WindowsWindow(int width, int height, char* title) :renderer {nullptr}
+Vulkan_GLFW_Windows_Window::Vulkan_GLFW_Windows_Window(int width, int height, char* title) :renderer {nullptr}
 {
 	if (!glfwInit())
 	{
@@ -15,23 +15,23 @@ WindowsWindow::WindowsWindow(int width, int height, char* title) :renderer {null
 	origin = glfwCreateWindow(width, height, title, nullptr, nullptr);
 }
 
-WindowsWindow::~WindowsWindow()
+Vulkan_GLFW_Windows_Window::~Vulkan_GLFW_Windows_Window()
 {
 	glfwDestroyWindow(origin);
 	glfwTerminate();
 }
 
-void WindowsWindow::OnUpdate()
+void Vulkan_GLFW_Windows_Window::OnUpdate()
 {
 	//glClear(GL_COLOR_BUFFER_BIT);
 	glfwSwapBuffers(origin);
 	glfwPollEvents();
 }
 
-void WindowsWindow::OnInit()
+void Vulkan_GLFW_Windows_Window::OnInit()
 {
 	glfwSetWindowUserPointer(origin, &windowData);
-	renderer = new RenderCore();
+	renderer = new VulkanRenderCore();
 	renderer->SetupVulkan();
 	glfwSetKeyCallback(origin, [](GLFWwindow* window, int key, int scancode, int action, int mods)
 	{
@@ -57,17 +57,17 @@ void WindowsWindow::OnInit()
 	});
 }
 
-void WindowsWindow::OnDestroy()
+void Vulkan_GLFW_Windows_Window::OnDestroy()
 {
 	renderer->OnDestroy();
 }
 
-void* WindowsWindow::GetNativeWindow() const
+void* Vulkan_GLFW_Windows_Window::GetNativeWindow() const
 {
 	return origin;
 }
 
-void* WindowsWindow::GetNativeInfoList() const
+void* Vulkan_GLFW_Windows_Window::GetNativeInfoList() const
 {
 	auto InfoList = renderer->GetInfoList();
 	return &InfoList;

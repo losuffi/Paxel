@@ -1,10 +1,10 @@
 #include "PXPCH.h"
-#include "RenderCore.h"
+#include "VulkanRenderCore.h"
 
 //#include <examples/imgui_impl_glfw.h>
 
 #include "Utils/FileUtils.h"
-void RenderCore::OnDestroy()
+void VulkanRenderCore::OnDestroy()
 {
 	for(auto imageView : swapchainImageviews)
 	{
@@ -23,7 +23,7 @@ void RenderCore::OnDestroy()
 	vkDestroyInstance(instance,nullptr);
 }
 
-void RenderCore::ImguiRendererBinding(GLFWwindow* window)
+void VulkanRenderCore::ImguiRendererBinding(GLFWwindow* window)
 {
 	//ImGui_ImplGlfw_InitForVulkan(window, true);
 	//ImGui_ImplVulkan_InitInfo initInfo = {};
@@ -40,7 +40,7 @@ void RenderCore::ImguiRendererBinding(GLFWwindow* window)
 	//ImGui_ImplVulkan_Init(&initInfo, WindowData.RenderPass);
 }
 
-VkRenderCoreInfoList RenderCore::GetInfoList() const
+VkRenderCoreInfoList VulkanRenderCore::GetInfoList() const
 {
 	const auto indics = FindQueueFamilies(PhysicalDevice);
 	return VkRenderCoreInfoList{
@@ -49,7 +49,7 @@ VkRenderCoreInfoList RenderCore::GetInfoList() const
 		indics, static_cast<uint32_t>(swapchainImageviews.size())};
 }
 
-void RenderCore::CreateVkInstance()
+void VulkanRenderCore::CreateVkInstance()
 {
 	CheckVkExtensions();
 	VkApplicationInfo appinfo = {};
@@ -77,7 +77,7 @@ void RenderCore::CreateVkInstance()
 	VkResult result = vkCreateInstance(&createinfo, nullptr, &instance);
 }
 
-void RenderCore::CheckVkExtensions()
+void VulkanRenderCore::CheckVkExtensions()
 {
 	uint32_t extensionCount = 0;
 	vkEnumerateInstanceExtensionProperties(nullptr, &extensionCount, nullptr);
@@ -90,7 +90,7 @@ void RenderCore::CheckVkExtensions()
 	}
 }
 
-void RenderCore::PickPhysicalDevice()
+void VulkanRenderCore::PickPhysicalDevice()
 {
 	PhysicalDevice = VK_NULL_HANDLE;
 	uint32_t deviceCount = 0;
@@ -115,7 +115,7 @@ void RenderCore::PickPhysicalDevice()
 	}
 }
 
-void RenderCore::CreateLogicDevice()
+void VulkanRenderCore::CreateLogicDevice()
 {
 	QueueFamilyIndics indices = FindQueueFamilies(PhysicalDevice);
 
@@ -152,23 +152,23 @@ void RenderCore::CreateLogicDevice()
 	vkGetDeviceQueue(device, indices.presentFamily.value(), 0, &presentQueue);
 }
 
-bool RenderCore::isSuitableDevice(VkPhysicalDevice device)
+bool VulkanRenderCore::isSuitableDevice(VkPhysicalDevice device)
 {
 	QueueFamilyIndics indices = FindQueueFamilies(device);
 	return indices.IsComplete();
 }
 
-bool RenderCore::CheckDeviceExtensionSupport(VkPhysicalDevice device)
+bool VulkanRenderCore::CheckDeviceExtensionSupport(VkPhysicalDevice device)
 {
 	uint32_t extensionCount;
 	vkEnumerateDeviceExtensionProperties(device, nullptr, &extensionCount, nullptr);
 	std::vector<VkExtensionProperties> availableExtensions(extensionCount);
-
+	return false;
 }
 
 
 
-void RenderCore::CreateSwapChain()
+void VulkanRenderCore::CreateSwapChain()
 {
 	const auto SwapChainSupport = QuerySwapChainSupport(PhysicalDevice);
 	PX_ENSURE_RET_VOID(!SwapChainSupport.formats.empty(), "SwapChain Format Get Is Empty!");
@@ -220,7 +220,7 @@ void RenderCore::CreateSwapChain()
 	CreateRenderPass(SwapChainSupport.formats[0].format);
 }
 
-void RenderCore::CreateImageViews(VkFormat ImageViewFormat)
+void VulkanRenderCore::CreateImageViews(VkFormat ImageViewFormat)
 {
 	swapchainImageviews.resize(swapchainImages.size());
 
@@ -245,7 +245,7 @@ void RenderCore::CreateImageViews(VkFormat ImageViewFormat)
 	}
 }
 
-VkShaderModule RenderCore::CreateShaderModule(const std::vector<char>& code)
+VkShaderModule VulkanRenderCore::CreateShaderModule(const std::vector<char>& code)
 {
 	VkShaderModuleCreateInfo CreateInfo{};
 	CreateInfo.sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;
@@ -256,7 +256,7 @@ VkShaderModule RenderCore::CreateShaderModule(const std::vector<char>& code)
 	return ShaderModule;
 }
 
-void RenderCore::CreateGraphicPipeline(const std::string& VertShaderFile,const std::string& FragShaderFile)
+void VulkanRenderCore::CreateGraphicPipeline(const std::string& VertShaderFile,const std::string& FragShaderFile)
 {
 	//Shader Specify
 	const VkShaderModule VertShaderModule = CreateShaderModule(FileUtils::ReadFile(VertShaderFile));
@@ -330,7 +330,7 @@ void RenderCore::CreateGraphicPipeline(const std::string& VertShaderFile,const s
 		"Failed to create graphics pipeline!");
 }
 
-void RenderCore::CreateFramebuffers()
+void VulkanRenderCore::CreateFramebuffers()
 {
 	swapchainFramebuffers.resize(swapchainImageviews.size());
 	for(size_t i = 0; i < swapchainImageviews.size(); ++ i)
@@ -348,7 +348,7 @@ void RenderCore::CreateFramebuffers()
 	}
 }
 
-void RenderCore::CreateRenderPass(VkFormat ViewFormat)
+void VulkanRenderCore::CreateRenderPass(VkFormat ViewFormat)
 {
 	// A render pass represents a collection of attachments, subpasses, and dependencies between
 	//the subpasses, and describes how the attachments are used over the course of the subpasses.
@@ -381,7 +381,7 @@ void RenderCore::CreateRenderPass(VkFormat ViewFormat)
 	PX_ENSURE_RET_VOID(vkCreateRenderPass(device, &RenderPassInfo, nullptr, &renderPass) == VK_SUCCESS, "failed to create render pass!");
 }
 
-void RenderCore::CreateCommandPool()
+void VulkanRenderCore::CreateCommandPool()
 {
 	QueueFamilyIndics QueueFamilyIndices = FindQueueFamilies(PhysicalDevice);
 	VkCommandPoolCreateInfo PoolInfo{};
@@ -391,7 +391,7 @@ void RenderCore::CreateCommandPool()
 	PX_ENSURE_RET_VOID(vkCreateCommandPool(device, &PoolInfo, nullptr, &CommandPool) == VK_SUCCESS, "failed to create command pool!");
 }
 
-void RenderCore::CreateCommandBuffers()
+void VulkanRenderCore::CreateCommandBuffers()
 {
 	CommandBuffers.resize(swapchainFramebuffers.size());
 	VkCommandBufferAllocateInfo AllocInfo{};
@@ -430,7 +430,7 @@ void RenderCore::CreateCommandBuffers()
 	}
 }
 
-void RenderCore::CreateDescriptorPool()
+void VulkanRenderCore::CreateDescriptorPool()
 {
 	VkDescriptorPoolSize poolSize[] =
 	{
@@ -457,7 +457,7 @@ void RenderCore::CreateDescriptorPool()
 	
 }
 
-void RenderCore::SetupVulkan()
+void VulkanRenderCore::SetupVulkan()
 {
 	//CreateVkInstance();
 	//PickPhysicalDevice();
@@ -465,7 +465,7 @@ void RenderCore::SetupVulkan()
 	//CreateDescriptorPool();
 }
 
-void RenderCore::SetVulkanWindow(ImGui_ImplVulkanH_Window* window, VkSurfaceKHR surface, int width, int height)
+void VulkanRenderCore::SetVulkanWindow(ImGui_ImplVulkanH_Window* window, VkSurfaceKHR surface, int width, int height)
 {
 	window->Surface = surface;
 	VkBool32 res;
@@ -486,12 +486,12 @@ void RenderCore::SetVulkanWindow(ImGui_ImplVulkanH_Window* window, VkSurfaceKHR 
 		nullptr,width,height, PX_MIN_IMAGE_COUNT);
 }
 
-void RenderCore::CleanupVulkanWindow()
+void VulkanRenderCore::CleanupVulkanWindow()
 {
 	ImGui_ImplVulkanH_DestroyWindow(instance,device,&WindowData,nullptr);
 }
 
-void RenderCore::CreateVulkanInstance(VkInstance& Instance)
+void VulkanRenderCore::CreateVulkanInstance(VkInstance& Instance)
 {
 	CheckVkExtensions();
 	VkApplicationInfo appinfo = {};
@@ -524,7 +524,7 @@ void RenderCore::CreateVulkanInstance(VkInstance& Instance)
 	PX_ENSURE_RET_VOID(vkCreateInstance(&createinfo, nullptr, &Instance) == VK_SUCCESS,"Create intance failed!");
 }
 
-QueueFamilyIndics RenderCore::FindQueueFamilies(VkPhysicalDevice device) const
+QueueFamilyIndics VulkanRenderCore::FindQueueFamilies(VkPhysicalDevice device) const
 {
 	QueueFamilyIndics indices;
 
@@ -556,7 +556,7 @@ QueueFamilyIndics RenderCore::FindQueueFamilies(VkPhysicalDevice device) const
 	return indices;
 }
 
-SwapChainSupportDetails RenderCore::QuerySwapChainSupport(VkPhysicalDevice device) const
+SwapChainSupportDetails VulkanRenderCore::QuerySwapChainSupport(VkPhysicalDevice device) const
 {
 	SwapChainSupportDetails details;
 	vkGetPhysicalDeviceSurfaceCapabilitiesKHR(device, surface, &details.capabilities);

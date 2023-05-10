@@ -1,12 +1,12 @@
 #pragma once
 #include "Window.h"
-#include "RenderCore.h"
+#include "VulkanRenderCore.h"
 #include <GLFW/glfw3.h>
-class WindowsWindow : public Window
+class Vulkan_GLFW_Windows_Window : public Window
 {
 public:
-	WindowsWindow(int width, int height, char* title);
-	~WindowsWindow();
+	Vulkan_GLFW_Windows_Window(int width, int height, char* title);
+	~Vulkan_GLFW_Windows_Window();
 	void OnUpdate() override;
 	void OnInit() override;
 	void OnDestroy() override;
@@ -16,6 +16,6 @@ public:
 	void* GetNativeInfoList() const override;
 protected:
 	GLFWwindow* origin;
-	RenderCore* renderer;
+	VulkanRenderCore* renderer;
 };
 

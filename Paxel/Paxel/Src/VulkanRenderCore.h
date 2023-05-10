@@ -88,7 +88,7 @@ struct PAXEL_API VkRenderCoreInfoList
 	const uint32_t ImageViewCount;
 };
 
-class PAXEL_API RenderCore
+class PAXEL_API VulkanRenderCore
 {
 public:
 	void SetupVulkan();
